@@ -1,0 +1,26 @@
+{
+  "name": "d-struct",
+  "version": "0.0.1",
+  "description": "collection of data struct",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "npm run build && npm test",
+    "test": "jest --config jest.config.js",
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guoshencheng/d-struct.git"
+  },
+  "keywords": [
+    "axios",
+    "router"
+  ],
+  "author": "guoshencheng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guoshencheng/d-struct/issues"
+  },
+  "homepage": "https://github.com/guoshencheng/d-struct#readme"
+}
