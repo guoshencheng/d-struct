@@ -20,6 +20,6 @@
     "lib": [ "es2015" ],
     "outDir": "./lib"
   },
-  "exclude": [ "node_modules/", "lib/" ],
+  "exclude": [ "node_modules/", "lib/", "src/*.test.ts", "src/**/*.test.ts" ],
   "include": [ "src/*.ts", "src/**/*.ts" ]
 }

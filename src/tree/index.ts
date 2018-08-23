@@ -2,13 +2,33 @@ export type TreeDataFilter<T> = (d: T) => boolean;
 
 export type TreeArrayElement<T> = T | string;
 
-export default class Tree<T> {
+export type BaseHandlerCollection = {
+  [key: string]: (...args) => void
+}
+
+interface TreeOptions<T, HandlerCollection extends BaseHandlerCollection> {
+  data: T;
+  handlers: HandlerCollection
+}
+
+export default class Tree<T, HandlerCollection extends BaseHandlerCollection = BaseHandlerCollection> {
   parent?: Tree<T>;
   data: T;
   nodes: Tree<T>[];
-  constructor(data: T) {
-    this.data = data;
-    this.nodes = [];
+  root?: Tree<T>;
+  constructor(options: T | TreeOptions<T, HandlerCollection>) {
+    // if (Object.prototype.hasOwnProperty.call)
+    // this.data = data;
+    // this.nodes = [];
+  }
+
+  // broadcast event from up to down
+  $broadcast(event: string, ...args): void {
+  }
+
+  // pop up event from down to up
+  $emit(event: string, ...args): void {
+
   }
 
   static fromArray<T>(array: TreeArrayElement<T>[]) {
@@ -41,6 +61,7 @@ export default class Tree<T> {
   addNode(t: Tree<T>) {
     this.nodes.push(t);
     t.parent = this;
+    t.root = this.root || this;
   }
 
   toArray(): TreeArrayElement<T>[]  {
