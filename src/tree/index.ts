@@ -1,3 +1,5 @@
+import { EventEmitter } from 'fbemitter';
+
 export type TreeDataFilter<T> = (d: T) => boolean;
 
 export type TreeArrayElement<T> = T | string;
@@ -6,29 +8,54 @@ export type BaseHandlerCollection = {
   [key: string]: (...args) => void
 }
 
-interface TreeOptions<T, HandlerCollection extends BaseHandlerCollection> {
-  data: T;
-  handlers: HandlerCollection
-}
+/**
+ *  Tree a tree struct to handle data
+ *  extends from EventEmitter to make broadcast and emit method
+ *
+ *  every node is tree and every tree is node
+ *  tree has no limit node
+ *  the node without parent is root
+ *  the node without children is really node
+ *
+ *  @param parent [the parent of this tree node]
+ */
+export default class Tree<T> extends EventEmitter {
 
-export default class Tree<T, HandlerCollection extends BaseHandlerCollection = BaseHandlerCollection> {
+  static BROADCAST_CHANGE_ROOT: string = 'BROADCAST_CHANGE_ROOT';
+
   parent?: Tree<T>;
   data: T;
   nodes: Tree<T>[];
   root?: Tree<T>;
-  constructor(options: T | TreeOptions<T, HandlerCollection>) {
-    // if (Object.prototype.hasOwnProperty.call)
-    // this.data = data;
-    // this.nodes = [];
+
+  constructor(data: T) {
+    super();
+    this.data = data;
+    this.nodes = [];
   }
 
   // broadcast event from up to down
   $broadcast(event: string, ...args): void {
+    this.nodes.forEach(node => {
+      node.emit(event, ...args);
+      node.$broadcast(event, ...args);
+    })
   }
 
   // pop up event from down to up
   $emit(event: string, ...args): void {
+    if (this.parent) {
+      this.parent.emit(event, ...args);
+      this.parent.$emit(event, ...args);
+    }
+  }
 
+  $updateRoot(root?: Tree<T>): Tree<T> {
+    this.root = root;
+    this.nodes.forEach(node => {
+      node.$updateRoot(this.root || this);
+    })
+    return this;
   }
 
   static fromArray<T>(array: TreeArrayElement<T>[]) {
@@ -57,11 +84,18 @@ export default class Tree<T, HandlerCollection extends BaseHandlerCollection = B
     return root;
   }
 
+  delNode(t: Tree<T>): Tree<T> {
+    const index = this.nodes.indexOf(t);
+    this.nodes.splice(index, 1);
+    t.$updateRoot()
+    return this;
+  }
 
-  addNode(t: Tree<T>) {
+  addNode(t: Tree<T>): Tree<T> {
     this.nodes.push(t);
     t.parent = this;
-    t.root = this.root || this;
+    t.$updateRoot(this.root || this);
+    return this;
   }
 
   toArray(): TreeArrayElement<T>[]  {

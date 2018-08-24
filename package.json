@@ -24,11 +24,15 @@
   },
   "homepage": "https://github.com/guoshencheng/d-struct#readme",
   "devDependencies": {
+    "@types/fbemitter": "^2.0.32",
     "@types/jest": "^23.3.1",
     "babel-core": "6",
     "babel-jest": "23",
     "jest": "^23.5.0",
     "ts-jest": "^23.1.4",
     "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "fbemitter": "^2.1.1"
   }
 }
