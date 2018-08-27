@@ -201,6 +201,17 @@ export default class Tree<T> extends EventEmitter {
     }
   }
 
+  /**
+   * equal
+   *
+   * check current tree is equal with other tree
+   *
+   * check current data equal to target tree
+   * check current nodes length to target tree node length
+   * check current nodes foreach to equak target nodes as sorted
+   *
+   * @param tree target tree
+   */
   equal(tree: Tree<T>): boolean {
     if (this.data !== tree.data) {
       return false;
