@@ -200,4 +200,16 @@ export default class Tree<T> extends EventEmitter {
       return;
     }
   }
+
+  equal(tree: Tree<T>): boolean {
+    if (this.data !== tree.data) {
+      return false;
+    }
+    if (this.nodes.length != tree.nodes.length) {
+      return false;
+    }
+    return this.nodes.reduce((pre, t, index) => {
+      return pre && t.equal(tree.nodes[index]);
+    }, true)
+  }
 }
